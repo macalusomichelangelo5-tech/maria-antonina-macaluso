@@ -133,6 +133,9 @@ const personJsonLd = {
     "https://www.lasicilia.it/news/santa-margherita-di-belice-trionfa-a-venezia",
     "https://www.ilmoderatore.it/venezia-83-leone-lungo-a-pochi-attimi",
     "https://www.radioamica.it/pochi-attimi-trionfa-a-venezia-la-camporealese-macaluso-e-la-partinicese-quatrosi-portano-la-sicilia-sul-podio-del-cinema/",
+    // === Database cinema autorevoli (alternative a Wikipedia per KP) ===
+    "https://www.mymovies.it/persone/maria-antonina-macaluso/410117/",
+    "https://www.cinemaitaliano.info/film/38844/festival/pochi-attimi.html",
   ],
   knowsAbout: [
     "Cinema",
@@ -420,6 +423,29 @@ const personJsonLd = {
         "15 curiosità e fatti verificati su Maria Antonina Macaluso: data nascita, Camporeale, sodalizio Angelo Faraci, dieci film, sei premi, Premio Leone Lungo.",
       datePublished: "2026-09-29T12:00:00Z",
       about: [{ "@type": "Person", name: "Maria Antonina Macaluso" }],
+    },
+    // === Database cinema terzi autorevoli (rafforza entità per Knowledge Panel) ===
+    {
+      "@type": "Article",
+      headline: "Maria Antonina Macaluso — Biografia MYmovies.it",
+      url: "https://www.mymovies.it/persone/maria-antonina-macaluso/410117/",
+      image: `${SITE.url}/images/hero-maria-antonina.jpg`,
+      publisher: { "@type": "Organization", name: "MYmovies.it" },
+      description:
+        "Scheda biografica ufficiale di Maria Antonina Macaluso su MYmovies.it — il principale database italiano di cinema. Include biografia, filmografia, premi e news.",
+      datePublished: "2024-01-01T00:00:00Z",
+      about: [{ "@type": "Person", name: "Maria Antonina Macaluso" }],
+    },
+    {
+      "@type": "Article",
+      headline: "Pochi Attimi (2026) — Scheda film Cinema Italiano",
+      url: "https://www.cinemaitaliano.info/film/38844/festival/pochi-attimi.html",
+      image: `${SITE.url}/images/venezia/venezia-01.jpg`,
+      publisher: { "@type": "Organization", name: "Cinema Italiano" },
+      description:
+        "Scheda del film Pochi Attimi (2026) di Angelo Faraci su Cinema Italiano — database nazionale cinema italiano. Cast, regia, produzione, festival.",
+      datePublished: "2026-01-01T00:00:00Z",
+      about: [{ "@type": "Movie", name: "Pochi Attimi" }],
     },
   ],
   // performerIn: filmografia completa con copertine originali + regista + descrizione

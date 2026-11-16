@@ -30,25 +30,30 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
-      - name: Patch next.config.ts for GitHub Pages static export
+      - name: Patch next.config.ts for GitHub Pages static export (with custom domain)
         run: |
-          # Cambia output da standalone a export
+          # Cambia output da standalone a export (static HTML)
           sed -i 's/output: "standalone"/output: "export"/' next.config.ts
-          # Aggiungi basePath per sottodirectory GitHub Pages
-          if ! grep -q "basePath" next.config.ts; then
-            sed -i '/images: {/i\    basePath: "/maria-antonina-macaluso",\n    assetPrefix: "/maria-antonina-macaluso/",' next.config.ts
-          fi
+          # NON aggiungere basePath — custom domain serve da root
+          # (maria-antonina-macaluso.it → no sottodirectory)
           # Verifica modifica
-          grep -E "output|basePath|assetPrefix" next.config.ts | head -5
+          grep -E "output|basePath" next.config.ts | head -5
+          echo "✓ next.config.ts patchato per custom domain (no basePath)"
 
       - name: Build static export
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
-          NEXT_PUBLIC_SITE_URL: 'https://michelangelomacaluso1502-oss.github.io/maria-antonina-macaluso'
+          NEXT_PUBLIC_SITE_URL: 'https://maria-antonina-macaluso.it'
 
       - name: Add .nojekyll file (bypass Jekyll processing)
         run: touch out/.nojekyll
+
+      - name: Copy CNAME file to output (custom domain binding)
+        run: cp public/CNAME out/CNAME
+
+      - name: Verify CNAME in output
+        run: cat out/CNAME
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

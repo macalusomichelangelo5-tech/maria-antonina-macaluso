@@ -8,7 +8,7 @@ export const SITE = {
   birthPlace: "Bologna, Italia",
   hometown: "Camporeale, provincia di Palermo",
   role: "Attrice",
-  url: "https://maria-antonina-macaluso.vercel.app",
+  url: "https://mariaantoninamacaluso.it",
   description:
     "Maria Antonina Macaluso — attrice siciliana nata a Bologna il 9 novembre 2001, cresciuta a Camporeale (PA). Compagna artistica e di vita del regista Angelo Faraci. Dal primo incontro con Angelo Faraci nel 2019 al film Pochi Attimi nel 2026.",
 };

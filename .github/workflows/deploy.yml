@@ -1,8 +1,8 @@
-name: Deploy static site to Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [gh-pages]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -12,28 +12,63 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Patch per export statico
+        run: |
+          sed -i 's/output: "standalone"/output: "export"/' next.config.ts
+          sed -i 's/images: {/images: { unoptimized: true,/' next.config.ts
+          for f in src/app/robots.ts src/app/sitemap.ts src/app/sitemap-news.xml/route.ts src/app/sitemap-images.xml/route.ts; do
+            grep -q 'force-static' "$f" || sed -i '1i export const dynamic = "force-static";\n' "$f"
+          done
+          mv src/app/api/translate/route.ts src/app/api/translate/route.ts.disabled 2>/dev/null || echo "translate gia disabilitato"
+          echo "Patch OK"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build static export
+        run: bunx --bun next build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      - name: Add .nojekyll to output
+        run: touch out/.nojekyll
+
+      - name: Verify output
+        run: |
+          test -f out/index.html
+          test -f out/robots.txt
+          test -f out/sitemap.xml
+          test -f out/CNAME
+          if grep -q '/_next/image' out/index.html; then
+            echo "ERROR: immagini rotte"
+            exit 1
+          fi
+          echo "OK: $(find out -type f | wc -l) file pronti"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout gh-pages (sito statico già compilato)
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
